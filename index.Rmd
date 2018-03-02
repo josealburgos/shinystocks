@@ -1,0 +1,60 @@
+---
+title: "Stock Prices and Volume"
+author: "Jose A Burgos"
+date: "March 1, 2018"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Analyzing Historical Performance of Stocks
+
+When investors put money on stocks, they usually do it thinking there will be a possitive return on their investment.  This return can come in the form of dividends or appreciation of the stock price.  The gain or losses in dollars can be calcualted as the difference between the price at which the investment is sold minus the price paid, plus any dividends received during the time span the stock was held.
+
+Technology companies are disrupting several markets throughout the world and their stock has appreciated considerably in the past few years.  This Shiny app, captures movements in stock prices and volume for some technology companies that have done exeptionally well in the last 4 years.  
+
+## Stocks Included in the Shiny App
+
+- Facebook
+- Apple
+- Google
+- Amazon
+
+Facebook is disrupting social media and with it, politics, news.  It is using artificial intelligence (AI) to know users better.
+
+Apple created an ecosystem based on the iphone that disrupted the smart phone industry.
+
+Google created a search engine that is second to none.  It is using data to develop many products based on AI.
+
+Amazon is disrupting the retail space, created the cloud and is expected to get into several industries.
+
+I think these companies will play a big role in the future of technology.
+
+## Amazon (AMZ) Historical Prices and Volume
+
+```{r, echo = TRUE, warning=FALSE}
+suppressMessages(library(ggplot2))
+suppressMessages(library(gridExtra))
+suppressMessages(library(tidyquant))
+from <- today() - years(4)
+stock <- "AMZ"
+    dat <- tq_get(stock, get = "stock.prices", from = from)
+    dat1 <- dat[,c(1,6,7)]
+    prices <- dat1 %>% ggplot(aes(x = date, y = adjusted)) + geom_line(color = "red") + geom_smooth(method = "loess")     +ylab("Adjusted Price") + xlab("") + theme_classic()
+    volume <- dat1 %>% ggplot() + geom_col(aes(x = date, y = volume)) + theme_classic()
+    grid.arrange(prices, volume)
+```
+
+## Next Steps
+
+Future improvements to this app, can include the following:
+
+-  Introduce a starting date for the graphs
+-  Divide the main panel in 4 slides
+-  One graph for adjusted prices
+  -  One graph for volume
+  -  One graph for a density graph of montly returns
+  -  One qqplot graph to determine how far from the normal the monthly returns are
+-  Allow the user to select any stock in the DOW or NASDAQ
